@@ -1,10 +1,3 @@
-module Kernel
-  def v(x,y)
-    CP::Vec2.new(x,y)
-  end  
-end
-
-
 module Z
   GRID = 100
 end
@@ -18,7 +11,16 @@ class WindFlow < Gosu::Window
   
   def initialize
     super(WIDTH, HEIGHT, false)
-    @flow = Flow.new(WIDTH/Flow::STEP, HEIGHT/Flow::STEP)
+    @flow = Flow.new(self, WIDTH/Flow::STEP, HEIGHT/Flow::STEP)
+
+    f2 = Flow.new(self, WIDTH/Flow::STEP, HEIGHT/Flow::STEP) do |x,y|      
+      v(x,y)
+    end
+
+    @flow.add(f2)
+      
+    #  v(x + x * 0.1, y + y * 0.1) * 0.05
+    #  v(Math::sin(x*0.001), Math::sin(y*0.001)) * 80
   end
   
   def button_down(key)

@@ -1,45 +1,66 @@
+require 'chipmunk'
+
 class Flow
 
-  STEP = 10
+  attr_reader :width, :height
   
-  def initialize(w,h)
-    @field = Array.new(w) do |i|
-      Array.new(h) do |j|
-        x = STEP * (i - w/2)
-        y = STEP * (j - h/2)
-        #	v(x + x * 0.1, y + y * 0.1) * 0.05
-        v(Math::sin(x*0.001), Math::sin(y*0.001)) * 80
+  STEP = 20
+  ZERO = CP::Vec2.new(0,0).freeze
+  
+  def initialize(w,h, &field_equation)
+    raise TypeError.new('Dimensions must be Fixnum') unless Fixnum === w and Fixnum === h
+    raise ArgumentError.new('Dimensions has to be positive') unless w>0 and h>0
+    
+    @width, @height = w, h
+    
+    @cols = Array.new(w) do |x|
+      Array.new(h) do |y|
+        if field_equation
+          field_equation.yield(x,y)
+        else
+          CP::Vec2.new(0,0)
+        end
       end
     end
   end
 
+  def [](x,y)
+    raise TypeError, "Expected integer" unless [x,y].all? { |a| Integer === a }
 
-  def draw(canvas)
-    red = Gosu::red while true
-    # each_point do |x,y, value|
-    #   arrow(canvas,x,y, value , red)
-    # end    
+    if x < 0 or y < 0 or x > @width-2 or y > @width-2
+      ZERO
+    else
+      @cols[x][y]      
+    end
   end
+
+
+  # To each vector is added a corresponding vector from the second flow.
+  def add!(f2, x_offset = 0, y_offset = 0)
+    raise TypeError, "Expected another flow" unless f2.kind_of?(Flow)
+
+    # Does not have to check dimensions - see Flow#[] for details.
+    each_point do |x,y,value|
+      o = f2[x + x_offset, y + y_offset]
+      value.x += o.x
+      value.y += o.y
+    end
+  end
+
+  protected
+
+  attr_reader :cols
 
   private
 
   def each_point(&block)
-    @field.each_with_index do |col,x|
+    @cols.each_with_index do |col,x|
       col.each_with_index do |value,y|
         block.yield(x * STEP,y * STEP,value)
       end
     end
   end
 
-  def arrow(canvas, x,y, dir,color)
-    x2 = dir.x + x
-    y2 = dir.y + y
-
-    return if [ y, y2 ].any? { |c| c < 0 or c >= WindFlow::HEIGHT }
-    return if [ x, x2 ].any? { |c| c < 0 or c >= WindFlow::WIDTH }
-    
-    canvas.draw_line(x,y, color, x2, y2, color, Z::GRID)
-  end
 
   
   
