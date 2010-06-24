@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'ruby-debug'
 require 'bundler'
 Bundler.require(:default, :test)
 

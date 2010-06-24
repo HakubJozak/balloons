@@ -56,11 +56,19 @@ class FlowTest <  MiniTest::Unit::TestCase
 
   def test_adding_flow_with_offset
     f1 = Flow.new(10,5) { v(1,1) }
-    f2 = Flow.new(2,2) { v(2,4) }
-    f1.add!(f2, 9, 4)
+    f2 = Flow.new(4,4) { v(2,4) }
+    f1.add!(f2, 8, 3)
     assert_equal v(1,1), f1[0,0]
     assert_equal v(0,0), f1[10,5]
     assert_equal v(3,5), f1[9,4]
+  end
+
+  def test_adding_flow_with_negative_offset
+    f1 = Flow.new(10,5) { v(1,1) }
+    f2 = Flow.new(4,4) { v(2,4) }
+    f1.add!(f2, -2, -2)
+    assert_equal v(3,5), f1[1,1]
+    assert_equal v(1,1), f1[2,2]
   end
 
 
