@@ -3,19 +3,12 @@
 require 'singleton'
 require 'rubygems'
 require 'bundler'
-Bundler.require
+Bundler.require(:default, :debug)
+require_all 'lib'
 
 
-$: << File.join(File.dirname(__FILE__), "/lib")
+Game.new.show
 
-
-Dir['lib/*.rb'].each do |file|
-  require File.basename(file)
-  puts "Loaded #{file}"
-end
-
-
-WindFlow.instance.show
 
 
 #p YAML::load(CP::Vec2.new(2,1).to_yaml)

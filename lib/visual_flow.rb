@@ -1,6 +1,6 @@
 class VisualFlow
 
-  attr_accessor :flow, window
+  attr_accessor :flow, :window
   
   def initialize(window, flow)
     @window, @flow = window, flow
