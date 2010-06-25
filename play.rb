@@ -4,7 +4,7 @@ require 'singleton'
 require 'rubygems'
 require 'bundler'
 Bundler.require(:default, :debug)
-require_all 'lib'
+require_all 'lib/**/*.rb'
 
 
 Game.new.show
