@@ -4,6 +4,10 @@ require 'singleton'
 require 'rubygems'
 require 'bundler'
 Bundler.require(:default, :debug)
+
+# require_all 'vendor/chingu/lib/**/*.rb'
+# require 'vendor/chingu/lib/chingu/chingu.rb'
+
 require_all 'lib/**/*.rb'
 
 

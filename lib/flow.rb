@@ -3,16 +3,16 @@ require 'chipmunk'
 class Flow
 
   attr_reader :width, :height
-  
+
   STEP = 20
   ZERO = CP::Vec2.new(0,0).freeze
-  
+
   def initialize(w,h, &field_equation)
     raise TypeError.new('Dimensions must be Fixnum') unless Fixnum === w and Fixnum === h
     raise ArgumentError.new('Dimensions has to be positive') unless w>0 and h>0
-    
+
     @width, @height = w, h
-    
+
     @cols = Array.new(w) do |x|
       Array.new(h) do |y|
         if field_equation
@@ -30,15 +30,17 @@ class Flow
     if x < 0 or y < 0 or x >= @width or y >= @height
       ZERO
     else
-      @cols[x][y]      
+      @cols[x][y]
     end
   end
 
 
-  # To each vector is added a corresponding vector from the second flow.
+  # To each vector is added a corresponding vector from the second
+  # flow.
+  #
   def add!(f2, x_offset = 0, y_offset = 0)
     raise TypeError, "Expected another flow" unless f2.kind_of?(Flow)
-    
+
     # Does not have to check dimensions - see Flow#[] for details.
     x_offset.upto(@width-1) do |x|
       y_offset.upto(@height-1) do |y|
@@ -65,7 +67,7 @@ class Flow
   end
 
 
-  
-  
+
+
 
 end

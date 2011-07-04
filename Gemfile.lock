@@ -1,0 +1,46 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    archive-tar-minitar (0.5.2)
+    awesome_print (0.4.0)
+    chingu (0.8.1)
+      crack
+      gosu (>= 0.7.25)
+      rest-client
+    chipmunk (5.3.4.4)
+    columnize (0.3.3)
+    crack (0.1.8)
+    gosu (0.7.33)
+    linecache19 (0.5.12)
+      ruby_core_source (>= 0.1.4)
+    mime-types (1.16)
+    minitest (2.3.1)
+    mynyml-redgreen (0.7.1)
+      term-ansicolor (>= 1.0.4)
+    require_all (1.2.0)
+    rest-client (1.6.3)
+      mime-types (>= 1.16)
+    ruby-debug-base19 (0.11.25)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby_core_source (>= 0.1.4)
+    ruby-debug19 (0.11.6)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby-debug-base19 (>= 0.11.19)
+    ruby_core_source (0.1.5)
+      archive-tar-minitar (>= 0.5.2)
+    term-ansicolor (1.0.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  awesome_print
+  bundler
+  chingu
+  chipmunk
+  minitest
+  mynyml-redgreen
+  require_all
+  ruby-debug19

@@ -1,41 +1,35 @@
-class Balloon < Chingu::GameObject
+class Balloon < Chingu::BasicGameObject
 
-  trait :velocity
-  trait :sprite, :image => lambda { draw_ball }
-  
+  trait :sprite, :image => 'balloon-small.png'
+
   include Chingu::Helpers::InputClient
 
   def initialize(opts = {})
     super(opts)
-    keys = [ :left, :right, :up, :down ]
-    self.input = Hash[*keys.zip(keys).flatten]
+    values = [ :left, :right, :up, :down ]
+    keys = values.map { |v| "holding_#{v.to_s}".to_sym }
+    self.input = Hash[*keys.zip(values).flatten]
+    @speed = 10
   end
 
- 
+  def to_s
+    "X:#{@x} Y:#{@y}"
+  end
+
   def left
-    @velocity_x = -2.5
+    @x -= @speed
   end
 
   def right
-    @velocity_x = 2.5
+    @x += @speed
   end
 
   def up
-    @velocity_y = 5    
+    @y -= @speed
   end
 
   def down
-    @velocity_y = -5    
+    @y += @speed
   end
-
-  private
-  
-  def self.draw_ball
-    r = 40
-    image = TexPlay.create_image($window, r*2, r*2)
-    image.paint { circle(r,r,r, :color => :white, :fill => true) }
-    image
-  end
-  
 
 end
