@@ -9,7 +9,7 @@
 #
 class EmptyImageStub
    def initialize(w,h)
-     @w, @h = w, h;
+     @w, @h = w, h
    end
 
    def to_blob
