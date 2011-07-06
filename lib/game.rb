@@ -1,4 +1,3 @@
-
 class Game < Chingu::Window
   def initialize
     super(800,600, false)
@@ -6,6 +5,4 @@ class Game < Chingu::Window
     push_game_state(Flying)
     # push_game_state(Chingu::GameStates::Debug)
   end
-
-
 end

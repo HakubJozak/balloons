@@ -5,7 +5,6 @@ class Flying < Chingu::GameState
   def initialize(options = {})
     super(options)
     @balloon = Balloon.create( :x => 200, :y => 400)
-    @background = Background.create
   end
 
   def setup
@@ -15,7 +14,7 @@ class Flying < Chingu::GameState
       :holding_a => :camera_left
     }
 
-    self.viewport.game_area = [0,0,1200,1200]
+#    self.viewport.game_area = [0,0,1200,1200]
     self.viewport.lag = 0.9
   end
 
@@ -28,7 +27,8 @@ class Flying < Chingu::GameState
   end
 
   def draw
-    fill(:from => Gosu::white, :to => Gosu::black)
+    fill(:from => Gosu::gray, :to => Gosu::black)
+    @balloon.draw
     super
   end
 
@@ -37,7 +37,8 @@ class Flying < Chingu::GameState
   end
 
   def update
-    self.viewport.center_around(@balloon)
+#    self.viewport.center_around()
+#    viewport
     super
   end
 

@@ -31,6 +31,8 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     term-ansicolor (1.0.5)
+    texplay (0.3.5)
+      gosu (>= 0.7.25)
 
 PLATFORMS
   ruby
@@ -44,3 +46,4 @@ DEPENDENCIES
   mynyml-redgreen
   require_all
   ruby-debug19
+  texplay
