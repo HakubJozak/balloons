@@ -1,4 +1,5 @@
 class Point
+
   attr_accessor :x, :y
 
   def initialize(x,y)
@@ -21,14 +22,29 @@ class Balloon < Chingu::BasicGameObject
 
   include Chingu::Helpers::InputClient
 
+  def initialize(opts = {})
+    super(opts)
+  end
+
   def setup
     @velocity = 10
-    sketch_balloon(40)
+    sketch_balloon(Random::rand(40) + 40)
+
+    puts options
 
     #    @p = Point.new(@options[:x], @options[:y])
     @p = Point::random(800, 600)
     @v = Point.new(Random::rand * 0.2,0.0)
   end
+
+  def x
+    @p.x
+  end
+
+  def y
+    @p.y
+  end
+
 
   def draw
     @image.draw(@p.x, @p.y, 0)
@@ -65,13 +81,14 @@ class Balloon < Chingu::BasicGameObject
   # TODO: chingu raises an exception otherwise investigate when @image
   # is not generated directly - maybe TexPlay just in time drawing issue.
   #
-  def sketch_balloon(radius, balloon_color = :random, basket_color = :random)
+  def sketch_balloon(radius, balloon_color = :random, basket_color = :brown)
     w, h = radius * 2 + 1, radius * 4 + 1
-    stub = EmptyImageStub.new(w,h)
+    stub = TexPlay::create_image($window, w*2 ,h * 2)
     @image = Gosu::Image.new( $window, stub, false)
 
     string_color = [ 0.2, 0.3, 0.3 , 0.5 ]
 
+    return
     @image.paint do
       #fill 0,0, :color => :white
 
@@ -87,12 +104,14 @@ class Balloon < Chingu::BasicGameObject
       # string count
       s = 6
 
+      center_x = 20
+
       # balloon
-      circle r - 1, r - 1, r, :color => balloon_color, :fill => true
-      line 0, r, 2*r, r, :color => string_color
+      circle r - 1 + center_x, r - 1, r, :color => balloon_color, :fill => true
+      line 0 + center_x, r, 2*r, r, :color => string_color
 
       # basket
-      rect r - b, h - b*2 - 1, r + b, h - 1, :color => basket_color, :fill => true
+      rect r - b + center_x, h - b*2 - 1, r + b + center_x, h - 1, :color => basket_color, :fill => true
 
       # strings
       y = h - b * 2 - 1
@@ -110,5 +129,4 @@ class Balloon < Chingu::BasicGameObject
       end
     end
   end
-
 end
