@@ -28,12 +28,10 @@ class Balloon < Chingu::BasicGameObject
 
   def setup
     @velocity = 10
-    sketch_balloon(Random::rand(40) + 40)
+    @image = sketch_balloon 100 # Random::rand(40) + 40
 
-    puts options
-
-    #    @p = Point.new(@options[:x], @options[:y])
-    @p = Point::random(800, 600)
+    @p = Point.new(@options[:x], @options[:y])
+    # @p = Point::random(200,200)
     @v = Point.new(Random::rand * 0.2,0.0)
   end
 
@@ -81,52 +79,57 @@ class Balloon < Chingu::BasicGameObject
   # TODO: chingu raises an exception otherwise investigate when @image
   # is not generated directly - maybe TexPlay just in time drawing issue.
   #
-  def sketch_balloon(radius, balloon_color = :random, basket_color = :brown)
+  def sketch_balloon(radius, balloon_color = 'orange', basket_color = 'brown')
     w, h = radius * 2 + 1, radius * 4 + 1
-    stub = TexPlay::create_image($window, w*2 ,h * 2)
-    @image = Gosu::Image.new( $window, stub, false)
 
-    string_color = [ 0.2, 0.3, 0.3 , 0.5 ]
+    pen = Magick::Draw.new
 
-    return
-    @image.paint do
-      #fill 0,0, :color => :white
+    string_color = 'gray'
 
-      # radius of the balloon
-      r = radius
+    # radius of the balloon
+    r = radius
 
-      # height
-      h = 3.5 * r
+    # height
+    h = 3.5 * r
 
-      # basket size
-      b = r / 6
+    # basket size
+    b = r / 6
 
-      # string count
-      s = 6
+    # string count
+    s = 6
 
-      center_x = 20
+    # balloon
+    pen.stroke_width(2)
+    pen.stroke('black')
+    pen.fill(balloon_color)
+    pen.circle r - 1, r - 1, r, 2
 
-      # balloon
-      circle r - 1 + center_x, r - 1, r, :color => balloon_color, :fill => true
-      line 0 + center_x, r, 2*r, r, :color => string_color
+    # basket
+    pen.stroke('gray')
+    pen.stroke_width(1)
+    pen.fill(basket_color)
+    pen.roundrectangle r - b, h - b*2 - 1, r + b, h - 1, 5, 5
 
-      # basket
-      rect r - b + center_x, h - b*2 - 1, r + b + center_x, h - 1, :color => basket_color, :fill => true
+    # upper string
+    pen.line 0, r, 2*r, r
 
-      # strings
-      y = h - b * 2 - 1
+    y = h - b * 2 - 1
+    lower = r - b
+    lstep = (2.0 * b) / s
+    upper = 0
+    ustep = (2.0 * r) / s
 
-      lower = r - b
-      lstep = (2.0 * b) / s
-
-      upper = 0
-      ustep = (2.0 * r) / s
-
-      (s + 1).times do |i|
-        line lower, y, upper, r, :color => string_color
-        upper += ustep
-        lower += lstep
-      end
+    # vertical strings
+    (s + 1).times do |i|
+      pen.line lower, y, upper, r
+      upper += ustep
+      lower += lstep
     end
+
+    canvas = Magick::Image.new(2*r, h, Magick::HatchFill.new('transparent','transparent'))
+    canvas.background_color = 'red'
+    pen.draw(canvas)
+
+    Gosu::Image.new( $window, canvas, false)
   end
 end

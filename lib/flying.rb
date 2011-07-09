@@ -12,11 +12,11 @@ class Flying < Chingu::GameState
     self.viewport.game_area = [0,0,1200,1200]
     self.viewport.lag = 0
 
-    @balloons = (1..50).to_a.map do
+    @balloons = (1..1).to_a.map do
       Balloon.new( { :x => 100, :y => 100 })
     end
 
-    @balloons.unshift  Balloon.new( { :x => 100, :y => 100, :color => :white })
+    # @balloons.unshift  Balloon.new( { :x => 100, :y => 100, :color => :white })
   end
 
   def camera_right
@@ -38,12 +38,9 @@ class Flying < Chingu::GameState
   end
 
   def update
-    @balloons.first.x
-    @balloons.first.y
-
     self.viewport.center_around(@balloons.first)
-    # viewport
-    @balloons.each { |b| b.update }
+
+    #    @balloons.each { |b| b.update }
     super
   end
 

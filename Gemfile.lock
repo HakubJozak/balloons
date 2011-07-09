@@ -20,6 +20,7 @@ GEM
     require_all (1.2.0)
     rest-client (1.6.3)
       mime-types (>= 1.16)
+    rmagick (2.13.1)
     ruby-debug-base19 (0.11.25)
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
@@ -31,8 +32,6 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     term-ansicolor (1.0.5)
-    texplay (0.3.5)
-      gosu (>= 0.7.25)
 
 PLATFORMS
   ruby
@@ -45,5 +44,5 @@ DEPENDENCIES
   minitest
   mynyml-redgreen
   require_all
+  rmagick
   ruby-debug19
-  texplay

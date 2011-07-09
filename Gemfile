@@ -4,7 +4,7 @@ source :gemcutter
 gem 'bundler'
 gem 'require_all'
 # gem 'gosu', "0.7.20"
-gem 'texplay'
+gem 'rmagick', :require => 'RMagick'
 gem 'chipmunk'
 gem 'chingu' # , :path => "~/prog/projects/chingu"
 
