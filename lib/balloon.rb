@@ -1,3 +1,16 @@
+class Random
+  def self.palette_color
+    [ "#E4A544","#EB5B12","#555086","#779FDC","#D57D36"][ Random::rand(4) ]
+  end
+
+
+  def self.color
+    c = (1..3).to_a.map { rand(100) }
+    "rgba(#{c[0]}%,#{c[1]}%,#{c[2]}%,100%)"
+  end
+end
+
+
 class Point
 
   attr_accessor :x, :y
@@ -18,21 +31,25 @@ def vec(x,y)
 end
 
 
-class Balloon < Chingu::BasicGameObject
+class Balloon < Chingu::GameObject
 
   include Chingu::Helpers::InputClient
 
-  def initialize(opts = {})
-    super(opts)
-  end
+  attr_accessor :z
 
   def setup
     @velocity = 10
-    @image = sketch_balloon 100 # Random::rand(40) + 40
+    @balloon_color = @options[:balloon_color]
 
-    @p = Point.new(@options[:x], @options[:y])
-    # @p = Point::random(200,200)
+    @image = sketch_balloon(100)
+    @p = Point.new @options[:x], @options[:y]
+
+    # z coordinate "origin" is 1.0 (it is in fact scale factor)
+    @z = @options[:z] || 1.0
+
     @v = Point.new(Random::rand * 0.2,0.0)
+
+    super
   end
 
   def x
@@ -43,10 +60,9 @@ class Balloon < Chingu::BasicGameObject
     @p.y
   end
 
-
-  def draw
-    @image.draw(@p.x, @p.y, 0)
-  end
+  # def draw
+  #   @image.draw(@p.x, @p.y, @z, @z, @z)
+  # end
 
   def update
     @p.x += @v.x
@@ -79,10 +95,11 @@ class Balloon < Chingu::BasicGameObject
   # TODO: chingu raises an exception otherwise investigate when @image
   # is not generated directly - maybe TexPlay just in time drawing issue.
   #
-  def sketch_balloon(radius, balloon_color = 'orange', basket_color = 'brown')
+  def sketch_balloon(radius, balloon_color = @balloon_color, basket_color = 'black')
     w, h = radius * 2 + 1, radius * 4 + 1
 
     pen = Magick::Draw.new
+    # TODO: translate x,y
 
     string_color = 'gray'
 
@@ -99,10 +116,10 @@ class Balloon < Chingu::BasicGameObject
     s = 6
 
     # balloon
-    pen.stroke_width(2)
+    pen.stroke_width(0.3)
     pen.stroke('black')
     pen.fill(balloon_color)
-    pen.circle r - 1, r - 1, r, 2
+    pen.circle r, r, r, 2
 
     # basket
     pen.stroke('gray')
@@ -127,7 +144,6 @@ class Balloon < Chingu::BasicGameObject
     end
 
     canvas = Magick::Image.new(2*r, h, Magick::HatchFill.new('transparent','transparent'))
-    canvas.background_color = 'red'
     pen.draw(canvas)
 
     Gosu::Image.new( $window, canvas, false)

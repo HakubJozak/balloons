@@ -1,3 +1,13 @@
+class Background < Chingu::GameObject
+  def setup
+    # fill = Magick::HatchFill.new('white','cyan')
+    fill = Magick::GradientFill.new(0, 0, 1200, 0, 'white', 'gray')
+    canvas = Magick::Image.new(1200,1200, fill)
+    @image = Gosu::Image.new( $window, canvas, false)
+  end
+end
+
+
 class Flying < Chingu::GameState
 
   trait :viewport
@@ -5,32 +15,29 @@ class Flying < Chingu::GameState
   def setup
     self.input =  {
       :escape => :exit,
-      :holding_d => :camera_right,
-      :holding_a => :camera_left
     }
 
     self.viewport.game_area = [0,0,1200,1200]
     self.viewport.lag = 0
 
-    @balloons = (1..1).to_a.map do
-      Balloon.new( { :x => 100, :y => 100 })
+    Background.create
+
+    @balloons = (1..20).to_a.map do
+      Balloon.create(:x => Random::rand(1200),
+                     :y => Random::rand(1200),
+                     :z => Random::rand() + 0.2,
+                     :balloon_color => Random::palette_color)
     end
 
-    # @balloons.unshift  Balloon.new( { :x => 100, :y => 100, :color => :white })
+    @balloons.sort_by &:z
+
+    @mouse = Mouse.create(:viewport => @viewport)
   end
 
-  def camera_right
-    # self.viewport.x_target += 50
-  end
-
-  def camera_left
-   # self.viewport.x_target -= 50
-  end
 
   def draw
-    fill(:from => Gosu::white, :to => Gosu::gray)
-    @balloons.each { |b| b.draw }
     super
+    @mouse.draw
   end
 
   def to_s
@@ -38,9 +45,8 @@ class Flying < Chingu::GameState
   end
 
   def update
-    self.viewport.center_around(@balloons.first)
-
-    #    @balloons.each { |b| b.update }
+#    @mouse.update
+#    @balloons.each { |b| b.update }
     super
   end
 
