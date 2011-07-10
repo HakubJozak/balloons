@@ -1,6 +1,6 @@
 class Random
   def self.palette_color
-    [ "#E4A544","#EB5B12","#555086","#779FDC","#D57D36"][ Random::rand(4) ]
+    Balloon::COLORS[ Random::rand(4) ]
   end
 
 
@@ -35,39 +35,34 @@ class Balloon < Chingu::GameObject
 
   include Chingu::Helpers::InputClient
 
-  attr_accessor :z
+  attr_accessor :x, :y, :z
+
+  COLORS = [ '#FF2222', "#E4A544","#EB5B12","#555086","#779FDC","#D57D36"].freeze
+
+
 
   def setup
-    @velocity = 10
-    @balloon_color = @options[:balloon_color]
+    @@sketches ||= COLORS.map do |color|
+      Balloon::sketch_balloon(100, color)
+    end.freeze
 
-    @image = sketch_balloon(100)
-    @p = Point.new @options[:x], @options[:y]
+    @image = @@sketches[Random::rand(@@sketches.size - 1)]
 
     # z coordinate "origin" is 1.0 (it is in fact scale factor)
     @z = @options[:z] || 1.0
 
     @v = Point.new(Random::rand * 0.2,0.0)
-
     super
   end
 
-  def x
-    @p.x
-  end
-
-  def y
-    @p.y
-  end
-
   def draw
-    @factor_x = @factor_y = @z
+    @zorder = @factor_x = @factor_y = @z
     super
   end
 
   def update
-    @p.x += @v.x
-    @p.y += @v.y
+    @x += @v.x
+    @y += @v.y
   end
 
   def to_s
@@ -92,11 +87,7 @@ class Balloon < Chingu::GameObject
 
   private
 
-  def gradient
-    fill = Magick::GradientFill.new(0, 0, 1200, 0, 'white', 'gray')
-  end
-
-  def contours_pen(r, balloon_color, basket_color)
+  def self.contours_pen(r, balloon_color, basket_color)
     pen = Magick::Draw.new
     # TODO: translate x,y
 
@@ -146,7 +137,7 @@ class Balloon < Chingu::GameObject
   # TODO: chingu raises an exception otherwise investigate when @image
   # is not generated directly - maybe TexPlay just in time drawing issue.
   #
-  def sketch_balloon(r, balloon_color = @balloon_color, basket_color = 'black')
+  def self.sketch_balloon(r, balloon_color, basket_color = 'black')
     w, h = r * 2, r * 4
 
     mask = Magick::Image.new(w, h)  { |i| i.background_color = 'black' }
