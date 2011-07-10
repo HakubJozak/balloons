@@ -25,12 +25,9 @@ class Flying < Chingu::GameState
     self.viewport.game_area = [0,0,1200,1200]
     self.viewport.lag = 0
 
-    puts "area #{self.viewport.game_area}"
-
-
     Background.create
 
-    @balloons = (1..20).to_a.map do
+    @balloons = (1..30).to_a.map do
       Balloon.create(:x => Random::rand(1200),
                      :y => Random::rand(1200),
                      :z => Random::rand() + 0.2,
@@ -53,9 +50,8 @@ class Flying < Chingu::GameState
   end
 
   def update
-#    @mouse.update
-#    @balloons.each { |b| b.update }
-    super
+    # super
+    @mouse.update
   end
 
 end

@@ -60,9 +60,10 @@ class Balloon < Chingu::GameObject
     @p.y
   end
 
-  # def draw
-  #   @image.draw(@p.x, @p.y, @z, @z, @z)
-  # end
+  def draw
+    @factor_x = @factor_y = @z
+    super
+  end
 
   def update
     @p.x += @v.x
@@ -91,20 +92,15 @@ class Balloon < Chingu::GameObject
 
   private
 
+  def gradient
+    fill = Magick::GradientFill.new(0, 0, 1200, 0, 'white', 'gray')
+  end
 
-  # TODO: chingu raises an exception otherwise investigate when @image
-  # is not generated directly - maybe TexPlay just in time drawing issue.
-  #
-  def sketch_balloon(radius, balloon_color = @balloon_color, basket_color = 'black')
-    w, h = radius * 2 + 1, radius * 4 + 1
-
+  def contours_pen(r, balloon_color, basket_color)
     pen = Magick::Draw.new
     # TODO: translate x,y
 
     string_color = 'gray'
-
-    # radius of the balloon
-    r = radius
 
     # height
     h = 3.5 * r
@@ -116,10 +112,10 @@ class Balloon < Chingu::GameObject
     s = 6
 
     # balloon
-    pen.stroke_width(0.3)
-    pen.stroke('black')
-    pen.fill(balloon_color)
-    pen.circle r, r, r, 2
+    # pen.stroke_width(2)
+    # pen.stroke('black')
+    # pen.fill('none')
+    # pen.circle r, r, r, 2
 
     # basket
     pen.stroke('gray')
@@ -143,9 +139,34 @@ class Balloon < Chingu::GameObject
       lower += lstep
     end
 
-    canvas = Magick::Image.new(2*r, h, Magick::HatchFill.new('transparent','transparent'))
-    pen.draw(canvas)
+    pen
+  end
 
+
+  # TODO: chingu raises an exception otherwise investigate when @image
+  # is not generated directly - maybe TexPlay just in time drawing issue.
+  #
+  def sketch_balloon(r, balloon_color = @balloon_color, basket_color = 'black')
+    w, h = r * 2, r * 4
+
+    mask = Magick::Image.new(w, h)  { |i| i.background_color = 'black' }
+    p = Magick::Draw.new
+    p.stroke_width(0)
+    p.stroke('none')
+    p.fill('white')
+    p.circle r, r, r, 2
+    p.draw(mask)
+
+    c = r / 2
+    fill = Magick::GradientFill.new(c,c,c,c , balloon_color, 'transparent')
+    grad = Magick::Image.new(2*r, 2*r, fill) { |i| i.background_color = 'transparent' }
+    canvas = Magick::Image.new(2*r, h) { |i| i.background_color = 'transparent' }
+
+    canvas.add_compose_mask(mask)
+    canvas.composite! grad, 0,0, Magick::HardLightCompositeOp
+    canvas.delete_compose_mask
+
+    contours_pen(r, balloon_color, basket_color).draw(canvas)
     Gosu::Image.new( $window, canvas, false)
   end
 end
