@@ -3,6 +3,8 @@ class Background < Chingu::GameObject
     # fill = Magick::HatchFill.new('white','cyan')
     @x = 0
     @y = 0
+    @center_x = 0
+    @center_y = 0
 
     fill = Magick::GradientFill.new(0, 0, 1200, 0, 'white', 'gray')
     canvas = Magick::Image.new(1200,1200, fill)
