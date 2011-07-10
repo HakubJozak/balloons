@@ -1,6 +1,9 @@
 class Background < Chingu::GameObject
   def setup
     # fill = Magick::HatchFill.new('white','cyan')
+    @x = 0
+    @y = 0
+
     fill = Magick::GradientFill.new(0, 0, 1200, 0, 'white', 'gray')
     canvas = Magick::Image.new(1200,1200, fill)
     @image = Gosu::Image.new( $window, canvas, false)
@@ -19,6 +22,9 @@ class Flying < Chingu::GameState
 
     self.viewport.game_area = [0,0,1200,1200]
     self.viewport.lag = 0
+
+    puts "area #{self.viewport.game_area}"
+
 
     Background.create
 

@@ -2,8 +2,9 @@ class Mouse < Chingu::BasicGameObject
 
   def setup
     @viewport = @options[:viewport]
+    @scroll_speed = @options[:scroll_speed] || 10
     @size = 10
-    @zone = 50
+    @zone = 20
     @image = sketch(@size)
     super
   end
@@ -13,8 +14,8 @@ class Mouse < Chingu::BasicGameObject
   end
 
   def update
-    puts $window.mouse_x, $window.mouse_y
-#    puts $window.width, $window.height
+    # puts $window.mouse_x, $window.mouse_y
+    #    puts $window.width, $window.height
     scroll(:left)  if x < @zone
     scroll(:right) if x > $window.width -  @zone
     scroll(:up)    if y < @zone
@@ -27,20 +28,17 @@ class Mouse < Chingu::BasicGameObject
   private
 
   def scroll(dir)
-    amount = 10
+    amount = @scroll_speed
 
     moves = {
-      :left  => [  amount, 0 ],
-      :right => [ -amount, 0 ],
-      :up    => [ 0,  amount ],
-      :down  => [ 0, -amount ]
+      :left  => [ -amount, 0 ],
+      :right => [  amount, 0 ],
+      :up    => [ 0, -amount ],
+      :down  => [ 0,  amount ]
     }
 
-    @viewport.x_target += moves[dir][0] # if @viewport.game_area.collide_point?(@viewport.x @viewport.y)
-    @viewport.y_target += moves[dir][1] # if @viewport.game_area.collide_point?(@viewport.x @viewport.y)
-
-    # puts @viewport.x_target
-    # puts @viewport.y_target
+    @viewport.x += moves[dir][0] # if @viewport.game_area.collide_point?(@viewport.x @viewport.y)
+    @viewport.y += moves[dir][1] # if @viewport.game_area.collide_point?(@viewport.x @viewport.y)
   end
 
   def sketch(length)
