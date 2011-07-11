@@ -21,7 +21,6 @@ class Flying < Chingu::GameState
 
   trait :viewport
 
-
   def setup
     self.input =  { :escape => :exit }
 
@@ -29,15 +28,17 @@ class Flying < Chingu::GameState
     self.viewport.lag = 0
 
     Background.create(:zorder => 0)
+    @field = Field.create
 
-    @balloons = (1..30).to_a.map do
-      Balloon.create(:x => Random::rand(@viewport.game_area.w),
-                     :y => Random::rand(@viewport.game_area.h),
-                     :z => Random::rand() + 0.2,
-                     :balloon_color => Random::palette_color)
-    end
+#     @balloons = (1..10).to_a.map do |i|
+#       Balloon.create(:x => Random::rand(800),
+#                      :y => (i * 60) + Random::rand(30),
+# #                     :velocity_x => 1,
+# #                     :z => Random::rand() + 0.2,
+#                      :balloon_color => Random::palette_color)
+#     end
 
-    @balloons.sort_by &:z
+#     @balloons.sort_by &:z
 
     @mouse = Mouse.create(:viewport => @viewport)
   end
@@ -45,6 +46,7 @@ class Flying < Chingu::GameState
 
   def draw
     super
+    @field.draw
     @mouse.draw
   end
 

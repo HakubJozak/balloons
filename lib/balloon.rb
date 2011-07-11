@@ -33,12 +33,13 @@ end
 
 class Balloon < Chingu::GameObject
 
+  trait :velocity, :debug => true
+
   include Chingu::Helpers::InputClient
 
   attr_accessor :x, :y, :z
 
   COLORS = [ '#FF2222', "#E4A544","#EB5B12","#555086","#779FDC","#D57D36"].freeze
-
 
 
   def setup
@@ -51,7 +52,6 @@ class Balloon < Chingu::GameObject
     # z coordinate "origin" is 1.0 (it is in fact scale factor)
     @z = @options[:z] || 1.0
 
-    @v = Point.new(Random::rand * 0.2,0.0)
     super
   end
 
@@ -61,28 +61,11 @@ class Balloon < Chingu::GameObject
   end
 
   def update
-    @x += @v.x
-    @y += @v.y
+    super
   end
 
   def to_s
     "Balloon(#{@x},#{@y})"
-  end
-
-  def left
-    @x -= @vx
-  end
-
-  def right
-    @x += @vx
-  end
-
-  def up
-    @y -= @velocity
-  end
-
-  def down
-    @y += @velocity
   end
 
   private
