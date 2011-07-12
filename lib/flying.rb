@@ -24,21 +24,21 @@ class Flying < Chingu::GameState
   def setup
     self.input =  { :escape => :exit }
 
-    self.viewport.game_area = [0,0,MAX_X, MAX_Y]
-    self.viewport.lag = 0
+    @viewport.game_area = [0,0,MAX_X, MAX_Y]
+    @viewport.lag = 0
 
     Background.create(:zorder => 0)
-    @field = Field.create
+    @field = Field.create(:viewport => @viewport)
 
-#     @balloons = (1..10).to_a.map do |i|
-#       Balloon.create(:x => Random::rand(800),
-#                      :y => (i * 60) + Random::rand(30),
-# #                     :velocity_x => 1,
-# #                     :z => Random::rand() + 0.2,
-#                      :balloon_color => Random::palette_color)
-#     end
+    @balloons = (1..10).to_a.map do |i|
+      Balloon.create(:x => Random::rand(800),
+                     :y => (i * 60) + Random::rand(30),
+#                     :velocity_x => 1,
+#                     :z => Random::rand() + 0.2,
+                     :balloon_color => Random::palette_color)
+    end
 
-#     @balloons.sort_by &:z
+    @balloons.sort_by &:z
 
     @mouse = Mouse.create(:viewport => @viewport)
   end
@@ -55,7 +55,14 @@ class Flying < Chingu::GameState
   end
 
   def update
+    @balloons.each do |b|
+      vx, vy = @field.value(b.x, b.y)
+      b.velocity_x = vx
+      b.velocity_y = vy
+    end
+
     super
+
     @mouse.update
   end
 

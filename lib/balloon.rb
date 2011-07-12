@@ -44,7 +44,7 @@ class Balloon < Chingu::GameObject
 
   def setup
     @@sketches ||= COLORS.map do |color|
-      Balloon::sketch_balloon(100, color)
+      Balloon::sketch_balloon(35, color)
     end.freeze
 
     @image = @@sketches[Random::rand(@@sketches.size - 1)]

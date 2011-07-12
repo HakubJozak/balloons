@@ -1,9 +1,31 @@
+class Chingu::Viewport
+  def w
+    $window.width
+  end
+
+  def h
+    $window.height
+  end
+
+
+  def x_range
+    (@x..(@x + w))
+  end
+
+  def y_range
+    (@y..(@y + h))
+  end
+
+end
+
+
 class Field < Chingu::BasicGameObject
 
-  @@max = 1000
+  @@max = 100
   @@min = 0
 
   def setup
+    @viewport = @options[:viewport]
     @arrow = sketch_arrow
     @angle = 0
   end
@@ -13,29 +35,37 @@ class Field < Chingu::BasicGameObject
   end
 
   def value(x,y)
-    [ x - 500 , y*2 - 350  ]
+    [ (x - 1000) / 1000 , ((y * 1.2) - 600) / 1000 ]
   end
 
   def intensity_color(value)
-    (255 / (@@max - @@min)) * value
+    i = (255 / (@@max - @@min)) * value
+    i = i > 255 ? 255 : i
+    i = i < 1 ? 0 : 1
   end
 
   def draw
-    (0..768).step(50).each do |y|
-      (0..1024).step(50).each do |x|
+    @viewport.apply do
+      @viewport.y_range.step(50).each do |y|
+        @viewport.x_range.step(50).each do |x|
+          vx,vy = value(x,y)
+          r = vx * vx + vy * vy
+          color = Gosu::gray # Gosu::Color.rgba(intensity_color(r),0,0,255)
 
-        vx,vy = value(x,y)
-        r = vx^2 + vy^2
-        color = Gosu::Color.rgba(intensity_color(r),0,0,255)
+          @center_x = 0.5
+          @center_y = 0.5
+          @zorder = 0
 
-        @center_x = 0.5
-        @center_y = 0.5
-        @zorder = 0
+          factor = r
 
-        factor = 1.0
+          angle = if vx == 0  && vy  == 0
+                    0
+                  else
+                    (Math::atan2(vy, vx)).radians_to_gosu # Math::PI/2
+                  end
 
-        angle =  (Math::atan2(vy, vx)).radians_to_gosu # Math::PI/2
-        @arrow.draw_rot(x, y, @zorder, angle, @center_x, @center_y, factor, factor, color)
+          @arrow.draw_rot(x, y, @zorder, angle, @center_x, @center_y, factor, factor, color)
+        end
       end
     end
   end
