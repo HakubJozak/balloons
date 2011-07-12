@@ -35,7 +35,7 @@ class Field < Chingu::BasicGameObject
   end
 
   def value(x,y)
-    [ (x - 1000) / 1000 , ((y * 1.2) - 600) / 1000 ]
+    [ (0.002 * (x - 1000)) , (0.002 * (y - 600))  ]
   end
 
   def intensity_color(value)
@@ -56,12 +56,12 @@ class Field < Chingu::BasicGameObject
           @center_y = 0.5
           @zorder = 0
 
-          factor = r
+          factor = 1.0
 
           angle = if vx == 0  && vy  == 0
                     0
                   else
-                    (Math::atan2(vy, vx)).radians_to_gosu # Math::PI/2
+                    (Math::atan2(vy, vx) - Math::PI/2).radians_to_gosu
                   end
 
           @arrow.draw_rot(x, y, @zorder, angle, @center_x, @center_y, factor, factor, color)
