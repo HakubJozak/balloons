@@ -16,7 +16,6 @@ class Background < Chingu::GameObject
 
     super
   end
-
 end
 
 
@@ -51,11 +50,11 @@ class Flying < Chingu::GameState
 
     wind = 'central'
 
-    def wind.value(x,y)
-      [ (0.002 * (x - 1000)) , (0.002 * (y - 600))  ]
-    end
+    # def wind.value(x,y)
+    #   [ 0.2, 0.0 ]
+    # end
 
-    @field.add_source wind
+#     @field.add_source wind
     @field.add_source @mouse
 
     super

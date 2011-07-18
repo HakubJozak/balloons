@@ -40,7 +40,9 @@ class Field < Chingu::BasicGameObject
   end
 
   def value(x,y)
-    [ 0, 0 ]
+    @sources.inject([0.0, 0.0]) do |sum, source|
+      source.value(x,y)
+    end
   end
 
   def intensity_color(value)

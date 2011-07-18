@@ -37,11 +37,11 @@ class Mouse < Chingu::BasicGameObject
   end
 
 
-  def value(x,y)
+  def value(_x,_y)
     if $window.button_down? Gosu::MsLeft
-      [ 1, 0 ]
+      [ (0.002 * (_x - self.x)) , (0.002 * (_y - self.y))  ]
     else
-      [ 0, 0 ]
+      [ 0 , 0 ]
     end
   end
 
