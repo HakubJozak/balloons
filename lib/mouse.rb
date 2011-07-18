@@ -37,9 +37,14 @@ class Mouse < Chingu::BasicGameObject
   end
 
 
-  def value(_x,_y)
+  def value(x,y)
     if $window.button_down? Gosu::MsLeft
-      [ (0.002 * (_x - self.x)) , (0.002 * (_y - self.y))  ]
+      # optimized sqrt( x^2 + y^2 )
+      # r = Math.hypot(x - self.x,  y - self.y)
+      r = (x - self.x)**2 + (y - self.y)**2
+
+      c = (r == 0) ? 0 : 100 / r
+      [ c * (x - self.x) , c * (y - self.y)  ]
     else
       [ 0 , 0 ]
     end
