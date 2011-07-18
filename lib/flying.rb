@@ -13,8 +13,14 @@ class Background < Chingu::GameObject
     fill = Magick::GradientFill.new(0, 0, MAX_X, 0, 'white', 'gray')
     canvas = Magick::Image.new(MAX_X,MAX_Y, fill)
     @image = Gosu::Image.new( $window, canvas, false)
+
+    super
   end
+
 end
+
+
+
 
 
 class Flying < Chingu::GameState
@@ -30,6 +36,7 @@ class Flying < Chingu::GameState
     Background.create(:zorder => 0)
     @field = Field.create(:viewport => @viewport)
 
+
     @balloons = (1..10).to_a.map do |i|
       Balloon.create(:x => Random::rand(800),
                      :y => (i * 60) + Random::rand(30),
@@ -41,6 +48,22 @@ class Flying < Chingu::GameState
     @balloons.sort_by &:z
 
     @mouse = Mouse.create(:viewport => @viewport)
+
+    wind = 'central'
+
+    def wind.value(x,y)
+      [ (0.002 * (x - 1000)) , (0.002 * (y - 600))  ]
+    end
+
+    @field.add_source wind
+    @field.add_source @mouse
+
+    super
+  end
+
+  def button_down(key)
+    @mouse.button_down(key)
+    super(key)
   end
 
 
@@ -55,10 +78,10 @@ class Flying < Chingu::GameState
   end
 
   def update
-    @balloons.each do |b|
-      vx, vy = @field.value(b.x, b.y)
-      b.velocity_x = vx
-      b.velocity_y = vy
+    @balloons.each do |balloon|
+      vx, vy = @field.value(balloon.x, balloon.y)
+      balloon.velocity_x = vx
+      balloon.velocity_y = vy
     end
 
     super

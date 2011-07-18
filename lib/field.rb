@@ -28,6 +28,11 @@ class Field < Chingu::BasicGameObject
     @viewport = @options[:viewport]
     @arrow = sketch_arrow
     @angle = 0
+    @sources = []
+  end
+
+  def add_source(source)
+    @sources << source
   end
 
   def update
@@ -35,7 +40,7 @@ class Field < Chingu::BasicGameObject
   end
 
   def value(x,y)
-    [ (0.002 * (x - 1000)) , (0.002 * (y - 600))  ]
+    [ 0, 0 ]
   end
 
   def intensity_color(value)
@@ -71,7 +76,6 @@ class Field < Chingu::BasicGameObject
   end
 
   private
-
 
   def sketch_arrow
     canvas = Magick::Image.new(21, 11)  { |i| i.background_color = 'transparent' }

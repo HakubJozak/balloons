@@ -85,12 +85,6 @@ class Balloon < Chingu::GameObject
     # string count
     s = 6
 
-    # balloon
-    # pen.stroke_width(2)
-    # pen.stroke('black')
-    # pen.fill('none')
-    # pen.circle r, r, r, 2
-
     # basket
     pen.stroke('gray')
     pen.stroke_width(1)
