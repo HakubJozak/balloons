@@ -57,7 +57,7 @@ class Field < Chingu::BasicGameObject
         @viewport.x_range.step(50).each do |x|
           vx,vy = value(x,y)
           r = vx * vx + vy * vy
-          color = Gosu::gray # Gosu::Color.rgba(intensity_color(r),0,0,255)
+          color = Gosu::Color.rgba(intensity_color(r),0,0,255)
 
           @center_x = 0.5
           @center_y = 0.5
