@@ -55,7 +55,7 @@ class Flying < Chingu::GameState
     # end
 
 #     @field.add_source wind
-    @field.add_source @mouse
+    @field.add_source MouseValue.new(@mouse, @viewport)
 
     super
   end
@@ -67,9 +67,11 @@ class Flying < Chingu::GameState
 
 
   def draw
-    super
-    @field.draw
-    @mouse.draw
+#    $window.clip_to(30,30,700,700) do
+      super
+      @field.draw
+      @mouse.draw
+#    end
   end
 
   def to_s

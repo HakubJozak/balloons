@@ -36,21 +36,6 @@ class Mouse < Chingu::BasicGameObject
     #end
   end
 
-
-  def value(x,y)
-    if $window.button_down? Gosu::MsLeft
-      # optimized sqrt( x^2 + y^2 )
-      # r = Math.hypot(x - self.x,  y - self.y)
-      r = (x - self.x)**2 + (y - self.y)**2
-
-      c = (r == 0) ? 0 : 100 / r
-      [ c * (x - self.x) , c * (y - self.y)  ]
-    else
-      [ 0 , 0 ]
-    end
-  end
-
-
   def update
     # puts $window.mouse_x, $window.mouse_y
     #    puts $window.width, $window.height
@@ -89,6 +74,36 @@ class Mouse < Chingu::BasicGameObject
     pen.line 0,0, 10, 10
     pen.draw(canvas)
     Gosu::Image.new($window, canvas)
+  end
+
+end
+
+
+class MouseValue
+
+  def initialize(mouse,viewport)
+    @mouse, @viewport = mouse, viewport
+  end
+
+  def x
+    @viewport.x + @mouse.x
+  end
+
+  def y
+    @viewport.y + @mouse.y
+  end
+
+  def value(x,y)
+    if $window.button_down? Gosu::MsLeft
+      # optimized sqrt( x^2 + y^2 )
+      # r = Math.hypot(x - self.x,  y - self.y)
+      r = (x - self.x)**2 + (y - self.y)**2
+
+      c = (r == 0) ? 0 : 100 / r
+      [ c * (x - self.x) , c * (y - self.y)  ]
+    else
+      [ 0 , 0 ]
+    end
   end
 
 end
